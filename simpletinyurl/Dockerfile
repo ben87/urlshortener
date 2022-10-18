@@ -7,4 +7,7 @@ COPY ./app app
 RUN pip install -r requirements.txt
 
 RUN chmod +x /code/entrypoint.sh
+
+EXPOSE 8000
+
 ENTRYPOINT ["sh", "/code/entrypoint.sh"]

@@ -18,3 +18,7 @@ Simple URL Shortener written in django
 
 ## Additonal command
 - For Testing `python manage.py test`
+
+## Constraint / Limitation
+- The minimum no of characters for alias is set to 5
+- The maximum no of characters for alias is set to 10
