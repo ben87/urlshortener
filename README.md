@@ -4,8 +4,7 @@ Simple URL Shortener written in django
 ## Technologies
 - Docker
 - Docker Compose
-- Python 3.x
-- Django 4.1x
+- Python 3.8 and above
 - Postgres
 
 ## Docker Images Used
@@ -16,4 +15,4 @@ Simple URL Shortener written in django
 1. Clone project using Git clone
 2. Install Docker in your workstation. Download from [here](https://www.docker.com/)
 3. In the root folder of this project, run ` docker compose up `
-4. Open web browser, go to [http://localhost:8000](http://localhost:8000)
+4. Access [http://localhost:8000] using web browser
