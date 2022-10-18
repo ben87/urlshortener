@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+        <title>Simple Tiny URL</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <script>
+
+            async function submitUrl() {
+                const form = document.getElementById('create-form');
+                const formData = new FormData(form);
+                const plainFormData = Object.fromEntries(formData.entries());
+                const response = await fetch(
+                    form.getAttribute('submit-url'),
+                    {
+                        method: "POST",
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(plainFormData)
+                    }
+                )
+                const data = await response.json();
+                return [response, data]
+            }
+
+            function createTinyURL(e) {
+                const urlLink = document.getElementById('url-a');
+                // Reset Link
+                urlLink.href = '';
+                urlLink.text = '';
+                // clear generated url
+                submitUrl().then(results => {
+                    const response = results[0];
+                    const data = results[1];
+
+                    const status = response.status;
+                    if (status == '201') {
+                        // Update Link
+                        urlLink.href = data['alias_url'];
+                        urlLink.text = data['alias_url'];
+                        // Reset Alias and long url
+                        document.getElementById('alias-input').value = '';
+                        document.getElementById('long-url-input').value = '';
+                    } else {
+                        var errorList = []
+                        if (data['alias']) {
+                            errorList.push('Alias');
+                            for(let i = 0; i < data['alias'].length; i+=1) {
+                                errorList.push('\t' + data['alias'][i]);
+                            }
+                        }
+                        if (data['long_url']) {
+                            errorList.push('Long URL');
+                            for(let i = 0; i < data['long_url'].length; i+=1) {
+                                errorList.push('\t' + data['long_url'][i]);
+                            }
+                        }
+                        alert(errorList.join('\n'));
+                    }
+                })
+           }
+        </script>
+    </head>
+    <body>
+        <div class="jumbotron text-center">
+            <h1>Simple Tiny URL</h1>
+        </div>
+
+        <div class="mx-auto" style="width: 400px">
+            <form id="create-form" submit-url="{% url 'tinyurl-create' %}">
+                <div class="form-group mb-3 mt-3">
+                    <label for="alias" class="mb-1">Alias</label>
+                    <input id="alias-input" name="alias" type="text" maxlength="10" class="form-control" id="input-alias" aria-describedby="aliasHelp" placeholder="Enter Alias">
+                </div>
+                <div class="form-group mb-3 mt-3">
+                    <label for="alias" class="mb-1">Long Url</label>
+                    <input id="long-url-input" name="long_url" type="text" class="form-control" id="input-alias" aria-describedby="longUrlHelp" placeholder="Enter Long URL">
+                </div>
+                <button type="button" class="btn btn-primary" onclick="createTinyURL()">Submit</button>
+            </form> 
+        </div>
+
+        <div class="mx-auto mt-4" style="width:500px">
+            <label>Generated URL:</label>
+            <a id="url-a" href="" target="_blank"></a>
+        </div>
+    </body>
+</html>
