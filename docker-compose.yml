@@ -7,6 +7,9 @@ services:
       POSTGRES_PASSWORD: tinyurlpassword
       POSTGRES_USER: tinyurluser
       POSTGRES_DB: tinyurl
+  redis:
+    image: redis:7.0.5-alpine3.16
+    container_name: redis
   tinyurl:
     container_name: tinyurl
     environment:
@@ -17,9 +20,13 @@ services:
       DJANGO_DB_PASSWORD: tinyurlpassword
       DJANGO_DB_HOST: postgres
       DJANGO_DB_PORT: 5432
+      DJANGO_CACHE_TYPE: redis
+      DJANGO_REDIS_HOST: redis://redis:6379
+      DJANGO_REDIS_DB: 1
       DJANGO_DEBUG: FALSE
     depends_on:
       - postgres
+      - redis
     build:
       context: simpletinyurl
       dockerfile: Dockerfile

@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.crypto import get_random_string
+from django.core.cache import cache
 
 from rest_framework import generics
 
@@ -16,9 +17,14 @@ def index(request):
 
 def alias(request, alias):
     # alias/redirect path
-    return redirect(
-        get_object_or_404(TinyURL, alias=alias).long_url
-    )
+    
+    # retrieve alias from cache
+    url = cache.get(alias)
+    if url is None:
+        url = get_object_or_404(TinyURL, alias=alias).long_url
+        cache.set(alias, url)
+
+    return redirect(url)
 
 
 class TinyURLCreateAPI(generics.CreateAPIView):
