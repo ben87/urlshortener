@@ -18,6 +18,8 @@ services:
       DJANGO_DB_HOST: postgres
       DJANGO_DB_PORT: 5432
       DJANGO_DEBUG: FALSE
+    depends_on:
+      - postgres
     build:
       context: simpletinyurl
       dockerfile: Dockerfile
