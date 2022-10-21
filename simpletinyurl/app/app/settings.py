@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -151,3 +151,27 @@ REST_FRAMEWORK = {
 }
 
 HOST = os.environ.get('DJANGO_HOST', 'http://localhost:8000')
+
+if os.environ.get('DJANGO_CACHE_TYPE') == 'redis':
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': os.environ['DJANGO_REDIS_HOST'],
+            'OPTIONS': {
+                'db': os.environ['DJANGO_REDIS_DB'],
+                'parser_class': 'redis.connection.PythonParser',
+                'pool_class': 'redis.BlockingConnectionPool',
+            }
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+            'LOCATION': '/tmp/django_cache',
+            'TIMEOUT': 60,
+            'OPTIONS': {
+                'MAX_ENTRIES': 1000
+            }
+        }
+    }

@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.core.cache import cache
+
 from rest_framework.test import APIClient
 
 from .models import TinyURL
@@ -80,3 +82,21 @@ class CreateTinyURLTestCase(TestCase):
             format='json')
 
         self.assertEqual(resp.status_code, 400)
+
+    def test_cache(self):
+        '''
+        1. Test if caching works
+        '''
+
+        client = APIClient()
+        resp = client.post(
+            '/api/tinyurl', 
+            {'alias': 'mytest', 'long_url':'http://www.google.com'},
+            format='json')
+
+        # cache should be empty
+        self.assertEqual(cache.get('mytest'), None)
+
+        req = self.client.get('/mytest', follow=False)
+        # cache should exists
+        self.assertEqual(cache.get('mytest'), 'http://www.google.com')

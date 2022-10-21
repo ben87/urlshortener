@@ -17,6 +17,8 @@ WORKDIR $HOME
 COPY ./requirements.txt .
 COPY ./entrypoint.sh .
 COPY ./app app
+
+RUN sudo chown $USER:$USER app -R
 RUN pip install -r requirements.txt --no-cache-dir
 
 RUN sudo chmod +x $HOME/entrypoint.sh

@@ -6,10 +6,12 @@ Simple URL Shortener written in django
 - Docker Compose
 - Python 3.8 and above
 - Postgres
+- Redis
 
 ## Docker Images Used
 - python:alphine
 - postgres:15.0-alpine3.16
+- redis:7.0.5-alpine3.16
 
 ## How to Install and Run the Project
 1. Clone project using Git clone
