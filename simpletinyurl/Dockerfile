@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python:3.10.7-alpine
 
 ARG USER=django
 ENV HOME /home/$USER
