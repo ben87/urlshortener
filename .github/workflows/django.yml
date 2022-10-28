@@ -27,4 +27,5 @@ jobs:
         pip install -r simpletinyurl/requirements.txt
     - name: Run Tests
       run: |
-        python simpletinyurl/app/manage.py test
+        cd simpletinyurl/app
+        python manage.py test
